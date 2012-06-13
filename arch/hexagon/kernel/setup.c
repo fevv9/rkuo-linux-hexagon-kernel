@@ -36,6 +36,8 @@
 #include <asm/prom.h>
 #include <asm/time.h>
 
+unsigned long vmversion;
+
 char cmd_line[COMMAND_LINE_SIZE];
 static char default_command_line[COMMAND_LINE_SIZE] __initdata = CONFIG_CMDLINE;
 
@@ -63,13 +65,16 @@ void __init setup_arch(char **cmdline_p)
 	pcycle_freq_mhz = 600;
 	thread_freq_mhz = 100;
 	sleep_clk_freq = 32000;
+	hvm_timer_freq = (cycles_t)__vmtimerop(getfreq, 0, 0);
 
 	/*
 	 * Set up event bindings to handle exceptions and interrupts.
 	 */
 	__vmsetvec(_K_VM_event_vector);
 
-	printk(KERN_INFO "PHYS_OFFSET=0x%08x\n", PHYS_OFFSET);
+	pr_info("PHYS_OFFSET=0x%08lx\n", PHYS_OFFSET);
+	pr_info("vmversion=0x%08lx\n", vmversion);
+
 	/*  initial machine setup from flattened device tree  */
 	mdesc = setup_machine_fdt(dtb);
 

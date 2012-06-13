@@ -1,7 +1,7 @@
 /*
- * Declarations for to Hexagon Virtal Machine.
+ * Declarations for to Hexagon Virtual Machine.
  *
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -51,6 +51,7 @@
 #define HVM_TRAP1_VMSETREGS		21
 #define HVM_TRAP1_VMGETREGS		22
 #define HVM_TRAP1_VMTIMEROP		24
+#define HVM_TRAP1_VMGETINFO		26
 
 #ifndef __ASSEMBLY__
 
@@ -78,6 +79,22 @@ enum VM_INT_OPS {
 	hvmi_clear
 };
 
+enum VM_TIMER_OPS {
+	getfreq,
+	getres,
+	gettime,
+	gettimeout,
+	settimeout,
+	deltatimeout
+};
+
+enum VM_STOP_STATUS {
+	hvmstop_none,
+	hvmstop_poweroff,
+	hvmstop_halt,
+	hvmstop_restart,
+	hvmstop_machinecheck
+};
 extern void _K_VM_event_vector(void);
 
 void __vmrte(void);
@@ -86,15 +103,21 @@ long __vmsetie(long);
 long __vmgetie(void);
 long __vmintop(enum VM_INT_OPS, long, long, long, long);
 long __vmclrmap(void *, unsigned long);
-long __vmnewmap(void *);
+long __vmnewmap(void *, unsigned long type, unsigned long tlb_flush_flag);
 long __vmcache(enum VM_CACHE_OPS op, unsigned long addr, unsigned long len);
 unsigned long long __vmgettime(void);
 long __vmsettime(unsigned long long);
-long __vmstart(void *, void *);
-void __vmstop(void);
+long __vmstart(void *, void *, int relprio);
+void __vmstop(enum VM_STOP_STATUS);
 long __vmwait(void);
 void __vmyield(void);
 long __vmvpid(void);
+unsigned long __vmgetinfo(unsigned long);
+
+unsigned long long __vmtimerop(enum VM_TIMER_OPS op, unsigned long dummy,
+			       unsigned long long timeout);
+
+unsigned long __vmversion(void);
 
 static inline long __vmcache_ickill(void)
 {
@@ -179,15 +202,16 @@ static inline long __vmintop_status(long i)
 	return __vmintop(hvmi_status, i, 0, 0, 0);
 }
 
-static inline long __vmintop_post(long i)
+static inline long __vmintop_post(long i, long cpu)
 {
-	return __vmintop(hvmi_post, i, 0, 0, 0);
+	return __vmintop(hvmi_post, i, cpu, 0, 0);
 }
 
 static inline long __vmintop_clear(long i)
 {
 	return __vmintop(hvmi_clear, i, 0, 0, 0);
 }
+
 
 #else /* Only assembly code should reference these */
 
@@ -262,7 +286,7 @@ static inline long __vmintop_clear(long i)
 
 #define HVM_GE_C_BUS	0x01
 #define HVM_GE_C_XPROT	0x11
-#define HVM_GE_C_XUSER	0x14
+#define HVM_GE_C_XUSER	0x12
 #define HVM_GE_C_INVI	0x15
 #define HVM_GE_C_PRIVI	0x1B
 #define HVM_GE_C_XMAL	0x1C

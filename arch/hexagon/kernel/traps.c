@@ -441,7 +441,7 @@ void do_trap0(struct pt_regs *regs)
 void do_machcheck(struct pt_regs *regs)
 {
 	/* Halt and catch fire */
-	__vmstop();
+	__vmstop(hvmstop_machinecheck);
 }
 
 /*

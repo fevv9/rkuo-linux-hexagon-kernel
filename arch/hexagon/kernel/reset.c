@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2012,2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,20 +17,27 @@
  */
 
 #include <linux/smp.h>
+#include <linux/irqflags.h>
 #include <asm/hexagon_vm.h>
+
+static inline void __do_vmstop(void *info)
+{
+	__vmstop((long)info);
+}
 
 void machine_power_off(void)
 {
-	smp_send_stop();
-	__vmstop();
+	on_each_cpu(__do_vmstop, (void *)hvmstop_poweroff, 0);
 }
 
 void machine_halt(void)
 {
+	on_each_cpu(__do_vmstop, (void *)hvmstop_halt, 0);
 }
 
 void machine_restart(char *cmd)
 {
+	on_each_cpu(__do_vmstop, (void *)hvmstop_restart, 0);
 }
 
 void (*pm_power_off)(void) = NULL;

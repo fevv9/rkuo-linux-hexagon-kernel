@@ -35,6 +35,9 @@
 
 #define BASE_IPI_IRQ 26
 
+/*  Virtual Processor ID storage  */
+DEFINE_PER_CPU(u32, vpid);
+
 /*
  * cpu_possible_mask needs to be filled out prior to setup_per_cpu_areas
  * (which is prior to any of our smp_prepare_cpu crap), in order to set
@@ -68,7 +71,7 @@ static inline void __handle_ipi(unsigned long *ops, struct ipi_data *ipi,
 			/*
 			 * call vmstop()
 			 */
-			__vmstop();
+			__vmstop(hvmstop_none);
 			break;
 
 		case IPI_RESCHEDULE:
@@ -115,7 +118,9 @@ void send_ipi(const struct cpumask *cpumask, enum ipi_message_type msg)
 
 		set_bit(msg, &ipi->bits);
 		/*  Possible barrier here  */
-		retval = __vmintop_post(BASE_IPI_IRQ+cpu);
+
+		/*  VPID's don't change  */
+		retval = __vmintop_post(BASE_IPI_IRQ+cpu, per_cpu(vpid, cpu));
 
 		if (retval != 0) {
 			printk(KERN_ERR "interrupt %ld not configured?\n",
@@ -161,6 +166,10 @@ void start_secondary(void)
 		: "r" (thread_ptr)
 	);
 
+	cpu = smp_processor_id();
+
+	per_cpu(vpid, cpu) = __vmvpid();
+
 	/*  Set the memory struct  */
 	atomic_inc(&init_mm.mm_count);
 	current->active_mm = &init_mm;
@@ -199,7 +208,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 
 	/*  Boot to the head.  */
 	stack_start =  ((void *) thread) + THREAD_SIZE;
-	__vmstart(start_secondary, stack_start);
+	__vmstart(start_secondary, stack_start, 0);
 
 	while (!cpu_online(cpu))
 		barrier();
@@ -227,6 +236,9 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 	/*  Also need to register the interrupts for IPI  */
 	if (max_cpus > 1)
 		setup_irq(BASE_IPI_IRQ, &ipi_intdesc);
+
+	per_cpu(vpid, smp_processor_id()) = __vmvpid();
+
 }
 
 void smp_send_reschedule(int cpu)

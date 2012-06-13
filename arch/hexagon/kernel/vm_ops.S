@@ -30,6 +30,10 @@
  * consistent with the ABI calling convention.
  */
 
+ENTRY(__vmversion)
+	trap1(#HVM_TRAP1_VMVERSION);
+	jumpr	R31;
+
 ENTRY(__vmrte)
 	trap1(#HVM_TRAP1_VMRTE);
 	jumpr	R31;
@@ -55,7 +59,6 @@ ENTRY(__vmclrmap)
 	jumpr	R31;
 
 ENTRY(__vmnewmap)
-	r1 = #VM_NEWMAP_TYPE_PGTABLES;
 	trap1(#HVM_TRAP1_VMNEWMAP);
 	jumpr	R31;
 
@@ -99,4 +102,8 @@ ENTRY(__vmsetregs)
 
 ENTRY(__vmgetregs)
 	trap1(#HVM_TRAP1_VMGETREGS);
+	jumpr	R31;
+
+ENTRY(__vmtimerop)
+	trap1(#HVM_TRAP1_VMTIMEROP);
 	jumpr	R31;

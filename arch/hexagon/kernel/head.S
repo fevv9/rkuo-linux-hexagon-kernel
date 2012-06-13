@@ -1,7 +1,7 @@
 /*
  * Early kernel startup code for Hexagon
  *
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -124,6 +124,22 @@ ENTRY(stext)
 	memw(r0 ++ #4) = r1;
 	{ r1 = add(r1,r2); } :endloop0
 
+	/*  Hopefully we don't need this any earlier than here  */
+	r0.l = #LO(0x00000800);
+	r0.h = #HI(0x00000800);
+	call	__vmversion;
+
+	{
+		r1.l = #LO(PAGE_OFFSET);
+		r2.l = #LO(vmversion);
+	}
+	{
+		r1.h = #HI(PAGE_OFFSET);
+		r2.h = #HI(vmversion);
+	}
+	r1 = sub(r2,r1);  /*  &vmversion - PAGE_OFFSET  */
+	r1 = add(r1,r25); /*  + PHYS_OFFSET */
+
 	r0 = r24;
 
 	/*
@@ -133,6 +149,7 @@ ENTRY(stext)
 	 * vm_ops.S
 	 */
 	r1 = #VM_TRANS_TYPE_TABLE
+	r2 = #VM_TLB_INVALIDATE_TRUE
 	call	__vmnewmap;
 
 	/*  Jump into virtual address range.  */
@@ -161,7 +178,6 @@ __head_s_vaddr_target:
 	r2 = asl(r2, #2)	/* times sizeof(PTE) (4bytes)	*/
 	r1 = add(r1,r2);
 	loop0(1f,r26)
-
 1:
 	{
 		memw(R1 ++ #4) = R0
@@ -169,6 +185,7 @@ __head_s_vaddr_target:
 
 	r0 = r24
 	r1 = #VM_TRANS_TYPE_TABLE
+	r2 = #VM_TLB_INVALIDATE_TRUE
 	call __vmnewmap
 
 	/*  Go ahead and install the trap0 return so angel calls work  */

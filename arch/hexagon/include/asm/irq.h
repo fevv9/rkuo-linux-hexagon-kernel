@@ -19,8 +19,8 @@
 #ifndef _ASM_IRQ_H_
 #define _ASM_IRQ_H_
 
-/* Number of first-level interrupts associated with the CPU core. */
-#define HEXAGON_CPUINTS 32
+/* Hypervisor flattened interrupts -- 32 per-cpu and 128 shared. */
+#define HEXAGON_CPUINTS 160
 
 /*
  * Must define NR_IRQS before including <asm-generic/irq.h>

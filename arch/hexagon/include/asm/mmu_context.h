@@ -1,7 +1,7 @@
 /*
  * MM context support for the Hexagon architecture
  *
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2012,2015 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -79,7 +79,8 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
 		next->context.generation = prev->context.generation;
 	}
 
-	__vmnewmap((void *)next->context.ptbase);
+	__vmnewmap((void *)next->context.ptbase, VM_TRANS_TYPE_TABLE,
+		   VM_TLB_INVALIDATE_TRUE);
 }
 
 /*
