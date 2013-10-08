@@ -236,6 +236,7 @@
 #else
 /* V4+ */
 /* turn on I$ prefetch early */
+/* turn on D$ prefetch early */
 /* the # ## # syntax inserts a literal ## */
 #define	vm_event_entry(CHandler) \
 	{ \
@@ -246,7 +247,7 @@
 	} \
 	{ \
 		memw(R29 + #_PT_PREDSUSR) = R0; \
-		R0 = setbit(R0, #16); \
+		R0 = or(R0, # ## #0x56000); \
 	} \
 	usr = R0; \
 	R1:0 = G1:0; \

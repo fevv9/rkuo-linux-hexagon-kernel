@@ -114,6 +114,18 @@ config HEXAGON_ARCH_VERSION
 	int "Architecture version"
 	default 2
 
+config HEXAGON_FORCE_USR
+	bool "Force USR bit at start of process"
+	default y
+	help
+	  If set, new processes will have their USR bit forced to a specified
+	  value.
+
+config HEXAGON_USR_VAL
+	hex "USR value to force"
+	default 0x56000
+	depends on HEXAGON_FORCE_USR
+
 config USE_OF
 	default n
 	bool "Device Tree support"

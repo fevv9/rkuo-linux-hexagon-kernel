@@ -1,7 +1,7 @@
 /*
  * Process creation support for Hexagon
  *
- * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -43,6 +43,10 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
 	pt_set_usermode(regs);
 	pt_set_elr(regs, pc);
 	pt_set_rte_sp(regs, sp);
+
+#ifdef CONFIG_HEXAGON_FORCE_USR
+	regs->usr = CONFIG_HEXAGON_USR_VAL;
+#endif
 }
 
 /*
