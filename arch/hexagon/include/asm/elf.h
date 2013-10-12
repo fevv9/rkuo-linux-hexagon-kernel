@@ -189,6 +189,11 @@ do {					\
 #define ELF_CORE_EFLAGS 0x3
 #endif
 
+#if CONFIG_HEXAGON_ARCH_VERSION == 5
+#define ELF_CORE_EFLAGS 0x4
+#endif
+
+
 /*
  * Some architectures have ld.so set up a pointer to a function
  * to be registered using atexit, to facilitate cleanup.  So that
