@@ -88,7 +88,19 @@ menu "Machine selection"
 
 choice
 	prompt "System type"
-	default HEXAGON_COMET
+	default HEXAGON_MSM8974
+
+config HEXAGON_MSM8974
+	bool "MSM8974"
+	select HEXAGON_PHYS_OFFSET
+	select HAVE_DMA_ATTRS
+	select ARCH_REQUIRE_GPIOLIB
+	select GENERIC_GPIO
+	select HEXAGON_SPLIT_2GB
+	select COMMON_CLK
+	select HEXAGON_H2_PIC
+	---help---
+	  Enable support for MSM8974 devices.
 
 config HEXAGON_COMET
 	bool "Comet Board"

@@ -1,6 +1,6 @@
 #  Makefile for the Hexagon arch
 
-KBUILD_DEFCONFIG = comet_defconfig
+KBUILD_DEFCONFIG = msm8974_defconfig
 
 # Do not use GP-relative jumps
 KBUILD_CFLAGS += -G0
@@ -40,6 +40,7 @@ core-y += arch/hexagon/kernel/ \
 	arch/hexagon/mm/ \
 	arch/hexagon/lib/
 
+core-$(CONFIG_HEXAGON_MSM8974)	+= arch/hexagon/platform/msm8974/
 
 #  Devtree blob targets
 boot := arch/hexagon/boot
