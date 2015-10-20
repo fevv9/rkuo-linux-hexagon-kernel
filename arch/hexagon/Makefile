@@ -39,3 +39,12 @@ head-y := arch/hexagon/kernel/head.o
 core-y += arch/hexagon/kernel/ \
 	arch/hexagon/mm/ \
 	arch/hexagon/lib/
+
+
+#  Devtree blob targets
+boot := arch/hexagon/boot
+core-$(CONFIG_DTB_BUILTIN) += arch/hexagon/boot/dts/
+
+PHONY += dtbs
+dtbs: scripts
+	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs

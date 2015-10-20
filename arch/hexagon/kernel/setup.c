@@ -1,7 +1,7 @@
 /*
  * Arch related setup for Hexagon
  *
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -32,10 +32,14 @@
 #include <asm/processor.h>
 #include <asm/hexagon_vm.h>
 #include <asm/vm_mmu.h>
+#include <asm/platform.h>
+#include <asm/prom.h>
 #include <asm/time.h>
 
 char cmd_line[COMMAND_LINE_SIZE];
 static char default_command_line[COMMAND_LINE_SIZE] __initdata = CONFIG_CMDLINE;
+
+struct machine_desc *mdesc;
 
 void calibrate_delay(void)
 {
@@ -49,7 +53,8 @@ void calibrate_delay(void)
 
 void __init setup_arch(char **cmdline_p)
 {
-	char *p = &external_cmdline_buffer;
+	char *p = &external_buffer;
+	void *dtb = &__dtb_start;
 
 	/*
 	 * These will eventually be pulled in via either some hypervisor
@@ -65,6 +70,11 @@ void __init setup_arch(char **cmdline_p)
 	__vmsetvec(_K_VM_event_vector);
 
 	printk(KERN_INFO "PHYS_OFFSET=0x%08x\n", PHYS_OFFSET);
+	/*  initial machine setup from flattened device tree  */
+	mdesc = setup_machine_fdt(dtb);
+
+	if (mdesc->setup_arch_machine)
+		mdesc->setup_arch_machine();
 
 	if (p[0] != '\0')
 		strlcpy(boot_command_line, p, COMMAND_LINE_SIZE);
@@ -83,6 +93,9 @@ void __init setup_arch(char **cmdline_p)
 	parse_early_param();
 
 	setup_arch_memory();
+
+	/*  Now is time we unflatten devicetree  */
+	unflatten_device_tree();
 
 #ifdef CONFIG_SMP
 	smp_start_cpus();

@@ -101,6 +101,17 @@ config HEXAGON_ARCH_VERSION
 	int "Architecture version"
 	default 2
 
+config USE_OF
+	default n
+	bool "Device Tree support"
+	select OF
+	select OF_EARLY_FLATTREE
+
+config DTB_BUILTIN
+	def_bool y
+	help
+	  Temporary bringup option; assumes DTB is built into kernel somewhere.
+
 config CMDLINE
 	string "Default kernel command string"
 	default ""
