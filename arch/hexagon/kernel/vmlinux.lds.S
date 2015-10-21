@@ -42,6 +42,14 @@ SECTIONS
 	HEAD_TEXT_SECTION
 	INIT_TEXT_SECTION(PAGE_SIZE)
 	PERCPU_SECTION(L1_CACHE_BYTES)
+
+	. = ALIGN(4);
+	.arch.info.init : AT(ADDR(.arch.info.init)) {
+	__arch_info_begin = .;
+		*(.arch.info.init)
+	__arch_info_end = .;
+	}
+
 	__init_end = .;
 
         . = ALIGN(_PAGE_SIZE);
