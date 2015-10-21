@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -22,6 +22,7 @@
 extern cycles_t        pcycle_freq_mhz;
 extern cycles_t        thread_freq_mhz;
 extern cycles_t        sleep_clk_freq;
+extern cycles_t        hvm_timer_freq;
 
 void setup_percpu_clockdev(void);
 void ipi_timer(void);

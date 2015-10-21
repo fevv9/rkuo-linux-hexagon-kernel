@@ -1,0 +1,16 @@
+Qualcomm Technologies, Inc. Hexagon Hypervisor Virtual Timer
+
+This is the virtual timer interface presented to the guest by the
+hypervisor.
+
+Required Properties:
+- compatible: must be "qcom,h2-timer"
+- interrupts: interrupt number for the timer; usually 12
+
+
+Example:
+
+	timer {
+		compatible="qcom,h2-timer";
+		interrupts = <12>;
+	};

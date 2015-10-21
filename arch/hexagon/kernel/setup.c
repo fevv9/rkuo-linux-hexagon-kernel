@@ -59,15 +59,6 @@ void __init setup_arch(char **cmdline_p)
 	void *dtb = &__dtb_start;
 
 	/*
-	 * These will eventually be pulled in via either some hypervisor
-	 * or devicetree description.  Hardwiring for now.
-	 */
-	pcycle_freq_mhz = 600;
-	thread_freq_mhz = 100;
-	sleep_clk_freq = 32000;
-	hvm_timer_freq = (cycles_t)__vmtimerop(getfreq, 0, 0);
-
-	/*
 	 * Set up event bindings to handle exceptions and interrupts.
 	 */
 	__vmsetvec(_K_VM_event_vector);
