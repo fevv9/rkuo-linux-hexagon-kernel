@@ -100,6 +100,11 @@ void __init setup_arch(char **cmdline_p)
 #ifdef CONFIG_SMP
 	smp_start_cpus();
 #endif
+
+#if defined(CONFIG_DUMMY_CONSOLE)
+	conswitchp = &dummy_con;
+#endif
+
 }
 
 /*
