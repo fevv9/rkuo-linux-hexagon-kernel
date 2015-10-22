@@ -1,0 +1,18 @@
+Qualcomm Technologies, Inc. Hexagon Hypervisor Virtual Interrupt Controller
+
+This is the virtual interrupt controller presented to the guest by the
+hypervisor.
+
+Required Properties:
+- compatible: must be "qcom,h2-pic"
+- interrupt-controller: node is an interrupt controller
+- #interrupt-cells: number of cells needed to describe interrupt source
+
+
+Example:
+
+	interrupt-controller {
+		compatible = "qcom,h2-pic";
+		interrupt-controller;
+		#interrupt-cells = <1>;
+	};

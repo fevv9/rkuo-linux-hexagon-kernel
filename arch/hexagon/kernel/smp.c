@@ -1,7 +1,7 @@
 /*
  * SMP support for Hexagon
  *
- * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2013,2015 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -29,11 +29,13 @@
 #include <linux/smp.h>
 #include <linux/spinlock.h>
 #include <linux/cpu.h>
+#include <linux/irqdomain.h>
 
 #include <asm/time.h>    /*  timer_interrupt  */
 #include <asm/hexagon_vm.h>
 
 #define BASE_IPI_IRQ 26
+DEFINE_PER_CPU(u32, ipi_irq);
 
 /*  Virtual Processor ID storage  */
 DEFINE_PER_CPU(u32, vpid);
@@ -150,6 +152,7 @@ void __init smp_prepare_boot_cpu(void)
 void start_secondary(void)
 {
 	unsigned int cpu;
+	int irq;
 	unsigned long thread_ptr;
 
 	/*  Calculate thread_info pointer from stack pointer  */
@@ -176,7 +179,12 @@ void start_secondary(void)
 
 	cpu = smp_processor_id();
 
-	setup_irq(BASE_IPI_IRQ + cpu, &ipi_intdesc);
+	for (irq = 0; irq < HEXAGON_CPUINTS; irq++)
+		__vmintop_locdis(irq);
+
+	per_cpu(ipi_irq, cpu) = irq_find_mapping(NULL, BASE_IPI_IRQ+cpu);
+	__vmintop_globen(BASE_IPI_IRQ+cpu);
+	setup_irq(per_cpu(ipi_irq, cpu), &ipi_intdesc);
 
 	/*  Register the clock_event dummy  */
 	setup_percpu_clockdev();
@@ -222,6 +230,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
 
 void __init smp_prepare_cpus(unsigned int max_cpus)
 {
+	int cpu = 0;
 	int i;
 
 	/*
@@ -234,8 +243,12 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 		set_cpu_present(i, true);
 
 	/*  Also need to register the interrupts for IPI  */
-	if (max_cpus > 1)
-		setup_irq(BASE_IPI_IRQ, &ipi_intdesc);
+	if (max_cpus > 1) {
+		per_cpu(ipi_irq, cpu) = irq_find_mapping(NULL,
+			BASE_IPI_IRQ+cpu);
+		__vmintop_globen(BASE_IPI_IRQ+cpu);
+		setup_irq(per_cpu(ipi_irq, cpu), &ipi_intdesc);
+	}
 
 	per_cpu(vpid, smp_processor_id()) = __vmvpid();
 
