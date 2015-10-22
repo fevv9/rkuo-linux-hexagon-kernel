@@ -33,4 +33,11 @@
 
 #include <asm-generic/irq.h>
 
+#include <linux/of.h>
+
+/*  H2 "pic" initialization at init_IRQ time  */
+int __init hexagon_pic_of_init(struct device_node *node,
+			       struct device_node *parent);
+
+
 #endif
