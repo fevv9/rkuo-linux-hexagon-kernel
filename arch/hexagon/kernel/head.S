@@ -27,8 +27,11 @@
 #include <asm/page.h>
 #include <asm/hexagon_vm.h>
 
+#ifdef CONFIG_HEXAGON_SPLIT_2GB
+#define SEGTABLE_ENTRIES #0x1e0
+#else
 #define SEGTABLE_ENTRIES #0x0e0
-
+#endif
 	__INIT
 ENTRY(stext)
 	/*

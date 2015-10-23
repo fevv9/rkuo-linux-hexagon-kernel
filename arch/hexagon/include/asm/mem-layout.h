@@ -29,7 +29,11 @@
  * assign it to the location counter.
  */
 
+#ifdef CONFIG_HEXAGON_SPLIT_2GB
+#define PAGE_OFFSET			_AC(0x80000000, UL)
+#else
 #define PAGE_OFFSET			_AC(0xc0000000, UL)
+#endif
 
 /*
  * Compiling for a platform that needs a crazy physical offset

@@ -59,6 +59,11 @@ config TRACE_IRQFLAGS_SUPPORT
 config GENERIC_CSUM
 	def_bool y
 
+config HEXAGON_SPLIT_2GB
+	def_bool n
+	---help---
+	  Kernel/user split is at 2GB instead of 3GB (0xc0000000)
+
 #
 # Use the generic interrupt handling code in kernel/irq/:
 #

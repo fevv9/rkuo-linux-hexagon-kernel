@@ -45,6 +45,12 @@ unsigned long zero_page_mask;
 /*  indicate pfn's of high memory  */
 unsigned long highstart_pfn, highend_pfn;
 
+#ifdef CONFIG_HEXAGON_SPLIT_2GB
+#define KERNEL_BIGPAGES_GB (2)
+#else
+#define KERNEL_BIGPAGES_GB (1)
+#endif
+
 DEFINE_PER_CPU(struct mmu_gather, mmu_gathers);
 
 /* Default cache attribute for newly created page tables */
@@ -222,8 +228,7 @@ void __init setup_arch_memory(void)
 	/*  this is pointer arithmetic; each entry covers 4MB  */
 	segtable = segtable + (PAGE_OFFSET >> 22);
 
-	/*  this actually only goes to the end of the first gig  */
-	segtable_end = segtable + (1<<(30-22));
+	segtable_end = segtable + (KERNEL_BIGPAGES_GB<<(30-22));
 
 	/*
 	 * Move forward to the start of empty pages; take into account
