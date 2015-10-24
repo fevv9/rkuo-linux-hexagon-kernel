@@ -301,6 +301,7 @@ static void cache_error(struct pt_regs *regs)
  */
 void do_genex(struct pt_regs *regs)
 {
+	clear_ie_cached();
 	/*
 	 * Decode Cause and Dispatch
 	 */
@@ -360,6 +361,8 @@ void do_trap0(struct pt_regs *regs)
 {
 	syscall_fn syscall;
 
+	clear_ie_cached();
+
 	switch (pt_cause(regs)) {
 	case TRAP_SYSCALL:
 		/* System call is trap0 #1 */
@@ -370,7 +373,7 @@ void do_trap0(struct pt_regs *regs)
 			return;  /*  return -ENOSYS somewhere?  */
 
 		/* Interrupts should be re-enabled for syscall processing */
-		__vmsetie(VM_INT_ENABLE);
+		vmsetie_cached(VM_INT_ENABLE);
 
 		/*
 		 * System call number is in r6, arguments in r0..r5.
@@ -440,6 +443,7 @@ void do_trap0(struct pt_regs *regs)
  */
 void do_machcheck(struct pt_regs *regs)
 {
+	clear_ie_cached();
 	/* Halt and catch fire */
 	__vmstop(hvmstop_machinecheck);
 }
@@ -450,6 +454,7 @@ void do_machcheck(struct pt_regs *regs)
 
 void do_debug_exception(struct pt_regs *regs)
 {
+	/*  normally we clear ie cached, but we're calling do_trap0 anyways  */
 	regs->hvmer.vmest &= ~HVM_VMEST_CAUSE_MSK;
 	regs->hvmer.vmest |= (TRAP_DEBUG << HVM_VMEST_CAUSE_SFT);
 	do_trap0(regs);

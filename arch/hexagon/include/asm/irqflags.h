@@ -1,7 +1,7 @@
 /*
  * IRQ support for the Hexagon architecture
  *
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -26,12 +26,12 @@
 
 static inline unsigned long arch_local_save_flags(void)
 {
-	return __vmgetie();
+	return vmgetie_cached();
 }
 
 static inline unsigned long arch_local_irq_save(void)
 {
-	return __vmsetie(VM_INT_DISABLE);
+	return vmsetie_cached(VM_INT_DISABLE);
 }
 
 static inline bool arch_irqs_disabled_flags(unsigned long flags)
@@ -41,22 +41,22 @@ static inline bool arch_irqs_disabled_flags(unsigned long flags)
 
 static inline bool arch_irqs_disabled(void)
 {
-	return !__vmgetie();
+	return !vmgetie_cached();
 }
 
 static inline void arch_local_irq_enable(void)
 {
-	__vmsetie(VM_INT_ENABLE);
+	vmsetie_cached(VM_INT_ENABLE);
 }
 
 static inline void arch_local_irq_disable(void)
 {
-	__vmsetie(VM_INT_DISABLE);
+	vmsetie_cached(VM_INT_DISABLE);
 }
 
 static inline void arch_local_irq_restore(unsigned long flags)
 {
-	__vmsetie(flags);
+	vmsetie_cached(flags);
 }
 
 #endif

@@ -99,6 +99,8 @@ void arch_do_IRQ(struct pt_regs *regs)
 	int virq;
 	struct pt_regs *old_regs = set_irq_regs(regs);
 
+	clear_ie_cached();
+
 	irq_enter();
 	/*  return of zero here is an error btw  */
 	virq = irq_find_mapping(NULL, irq);

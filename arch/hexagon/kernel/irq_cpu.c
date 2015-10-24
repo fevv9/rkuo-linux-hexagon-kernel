@@ -1,7 +1,7 @@
 /*
  * First-level interrupt controller model for Hexagon.
  *
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -23,28 +23,48 @@
 #include <linux/irqdomain.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
+#include <linux/percpu.h>
 #include <asm/irq.h>
 #include <asm/hexagon_vm.h>
 
-static void mask_irq(struct irq_data *data)
+DEFINE_PER_CPU(long, ie_cached);
+
+/*  caching replacement for the old __vmsetie()  */
+
+long vmsetie_cached(long val)
 {
-	__vmintop_locdis((long) data->irq);
+	return __vmsetie_cached(val, this_cpu_ptr(&ie_cached));
 }
 
-static void mask_irq_num(unsigned int irq)
+/*
+ * sets the interrupt enable (ie) state, but fudges the cache val because
+ * vmrte can still change ie on us; see vm_entry.S
+ */
+
+void vmsetie_rte_disable(void)
 {
-	__vmintop_locdis((long) irq);
+	__vmsetie_cached(VM_INT_DISABLE, this_cpu_ptr(&ie_cached));
+	__this_cpu_write(ie_cached, ints_enabled(current_thread_info()->regs));
 }
 
-static void unmask_irq(struct irq_data *data)
+void vmsetie_disable(void)
 {
-	__vmintop_locen((long) data->irq);
+	__vmsetie_cached(VM_INT_DISABLE, this_cpu_ptr(&ie_cached));
 }
 
-/*  This is actually all we need for handle_fasteoi_irq  */
-static void eoi_irq(struct irq_data *data)
+long vmgetie_cached(void)
 {
-	__vmintop_globen((long) data->irq);
+	return __this_cpu_read(ie_cached);
+}
+
+void load_ie_cache(void)
+{
+	__this_cpu_write(ie_cached, __vmgetie());
+}
+
+void clear_ie_cached(void)
+{
+	__this_cpu_write(ie_cached, 0);
 }
 
 void __init init_IRQ(void)

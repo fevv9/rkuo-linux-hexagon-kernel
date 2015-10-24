@@ -1,7 +1,7 @@
 /*
  * Export of symbols defined in assembly files and/or libgcc.
  *
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2015 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -30,7 +30,7 @@ EXPORT_SYMBOL(__copy_to_user_hexagon);
 EXPORT_SYMBOL(__iounmap);
 EXPORT_SYMBOL(__strnlen_user);
 EXPORT_SYMBOL(__vmgetie);
-EXPORT_SYMBOL(__vmsetie);
+EXPORT_SYMBOL(__vmsetie_cached);
 EXPORT_SYMBOL(__vmyield);
 EXPORT_SYMBOL(empty_zero_page);
 EXPORT_SYMBOL(ioremap_nocache);
