@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2015 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,25 +10,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301, USA.
  */
 
 #ifndef _ASM_SETUP_H
 #define _ASM_SETUP_H
 
-#ifdef __KERNEL__
 #include <linux/init.h>
-#else
-#define __init
-#endif
+#include <uapi/asm/setup.h>
 
-#include <asm-generic/setup.h>
-
-extern char external_cmdline_buffer;
-
+extern char external_buffer;
 void __init setup_arch_memory(void);
 
 #endif
