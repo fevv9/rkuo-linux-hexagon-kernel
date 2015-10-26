@@ -43,11 +43,6 @@ static char default_command_line[COMMAND_LINE_SIZE] __initdata = CONFIG_CMDLINE;
 
 struct machine_desc *mdesc;
 
-void calibrate_delay(void)
-{
-	loops_per_jiffy = thread_freq_mhz * 1000000 / HZ;
-}
-
 /*
  * setup_arch -  high level architectural setup routine
  * @cmdline_p: pointer to pointer to command-line arguments
