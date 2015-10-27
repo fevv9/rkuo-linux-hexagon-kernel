@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,5 +25,7 @@
 #define MAX_DMA_ADDRESS  (PAGE_OFFSET)
 
 extern size_t hexagon_coherent_pool_size;
+
+void __init hexagon_dma_init(void);
 
 #endif
