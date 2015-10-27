@@ -34,6 +34,9 @@
 #endif
 	__INIT
 ENTRY(stext)
+	nop
+	nop
+	R27 = R0  /*  Bootloader hands us one value in R0  */
 	/*
 	 * VMM will already have set up true vector page, MMU, etc.
 	 * To set up initial kernel identity map, we have to pass
@@ -231,6 +234,10 @@ __head_s_vaddr_target:
 	r2 = sub(r2,r0);
 	call memset;
 
+	R0.H = #HI(boot_info);
+	R0.L = #LO(boot_info);
+	memw(R0) = R27;  //  save the boot info pointer
+
 	/*  Set PHYS_OFFSET; should be in R25 */
 #ifdef CONFIG_HEXAGON_PHYS_OFFSET
 	r0.l = #LO(__phys_offset);
@@ -249,7 +256,7 @@ __head_s_vaddr_target:
 
 .p2align 12
 ENTRY(external_buffer)
-        .fill _PAGE_SIZE,1,0
+	.fill _PAGE_SIZE,1,0
 
 .data
 .p2align PAGE_SHIFT

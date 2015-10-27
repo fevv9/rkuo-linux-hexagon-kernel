@@ -41,6 +41,8 @@ unsigned long vmversion;
 char cmd_line[COMMAND_LINE_SIZE];
 static char default_command_line[COMMAND_LINE_SIZE] __initdata = CONFIG_CMDLINE;
 
+void *boot_info;
+
 struct machine_desc *mdesc;
 
 /*
