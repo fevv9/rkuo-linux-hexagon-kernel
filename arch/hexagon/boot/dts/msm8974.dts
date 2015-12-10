@@ -52,6 +52,12 @@
 			interrupts = <12>;
 		};
 
+		hwtimer@FE2A0000 {
+			compatible="qcom,qtimer";
+			reg = <0xfe2a0000 0x1000>;
+			interrupts = <35>;
+		};
+
 		msmgpio: gpio@fd510000 {
 			compatible = "qcom,msm-gpio";
 			gpio-controller;
