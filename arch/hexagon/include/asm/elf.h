@@ -1,7 +1,7 @@
 /*
  * ELF definitions for the Hexagon architecture
  *
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2013,2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -193,6 +193,25 @@ do {					\
 #define ELF_CORE_EFLAGS 0x4
 #endif
 
+#if CONFIG_HEXAGON_ARCH_VERSION == 55
+#define ELF_CORE_EFLAGS 0x5
+#endif
+
+#if CONFIG_HEXAGON_ARCH_VERSION == 60
+#define ELF_CORE_EFLAGS 0x60
+#endif
+
+#if CONFIG_HEXAGON_ARCH_VERSION == 61
+#define ELF_CORE_EFLAGS 0x61
+#endif
+
+#if CONFIG_HEXAGON_ARCH_VERSION == 62
+#define ELF_CORE_EFLAGS 0x62
+#endif
+
+#if CONFIG_HEXAGON_ARCH_VERSION == 65
+#define ELF_CORE_EFLAGS 0x65
+#endif
 
 /*
  * Some architectures have ld.so set up a pointer to a function

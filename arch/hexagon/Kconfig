@@ -119,8 +119,9 @@ config HEXAGON_COMET
 endchoice
 
 config HEXAGON_ARCH_VERSION
-	int "Architecture version"
-	default 2
+	int "Architecture version (1 - 65)"
+	range 1 65
+	default 60
 
 config HEXAGON_FORCE_USR
 	bool "Force USR bit at start of process"
