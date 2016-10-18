@@ -1,7 +1,7 @@
 /*
  * Declarations for to Hexagon Virtual Machine.
  *
- * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -294,6 +294,7 @@ static inline long __vmintop_clear(long i)
 #define HVM_GE_C_XPROT	0x11
 #define HVM_GE_C_XUSER	0x12
 #define HVM_GE_C_INVI	0x15
+#define HVM_GE_C_COPROC 0x16
 #define HVM_GE_C_PRIVI	0x1B
 #define HVM_GE_C_XMAL	0x1C
 #define HVM_GE_C_WREG	0x1D
@@ -305,6 +306,13 @@ static inline long __vmintop_clear(long i)
 #define HVM_GE_C_RUSER	0x24
 #define HVM_GE_C_WUSER	0x25
 #define HVM_GE_C_CACHE	0x28
+
+/* Extended TLB miss cause codes; earlier ones might be deprecated */
+#define HVM_GE_C_TLBMISSX_0		0x60
+#define HVM_GE_C_TLBMISSX_1		0x61
+#define HVM_GE_C_TLBMISSX_ICINVA	0x62
+#define HVM_GE_C_TLBMISSR		0x70
+#define HVM_GE_C_TLBMISSW		0x71
 
 /*
  * Cause codes for Machine Check

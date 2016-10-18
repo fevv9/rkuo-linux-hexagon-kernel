@@ -1,7 +1,7 @@
 /*
  * Kernel traps/events for Hexagon processor
  *
- * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2014,2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -56,12 +56,17 @@ static const char *ex_name(int ex)
 	switch (ex) {
 	case HVM_GE_C_XPROT:
 	case HVM_GE_C_XUSER:
+	case HVM_GE_C_TLBMISSX_0:
+	case HVM_GE_C_TLBMISSX_1:
+	case HVM_GE_C_TLBMISSX_ICINVA:
 		return "Execute protection fault";
 	case HVM_GE_C_RPROT:
 	case HVM_GE_C_RUSER:
+	case HVM_GE_C_TLBMISSR:
 		return "Read protection fault";
 	case HVM_GE_C_WPROT:
 	case HVM_GE_C_WUSER:
+	case HVM_GE_C_TLBMISSW:
 		return "Write protection fault";
 	case HVM_GE_C_XMAL:
 		return "Misaligned instruction";
@@ -80,6 +85,8 @@ static const char *ex_name(int ex)
 		return "Precise bus error";
 	case HVM_GE_C_CACHE:
 		return "Cache error";
+	case HVM_GE_C_COPROC:
+		return "Illegal Coproc instruction";
 
 	case 0xdb:
 		return "Debugger trap";
