@@ -111,6 +111,14 @@ config HEXAGON_MSM8974
 	---help---
 	  Enable support for MSM8974 devices.
 
+config HEXAGON_MSM8996
+	bool "MSM8996"
+	select HEXAGON_PHYS_OFFSET
+	select HEXAGON_H2_PIC
+	select HAVE_DMA_ATTRS
+	---help---
+	  Support for MSM8996
+
 config HEXAGON_COMET
 	bool "Comet Board"
 	---help---

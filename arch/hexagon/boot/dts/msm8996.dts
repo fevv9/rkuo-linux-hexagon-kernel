@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+	chosen { };
+	aliases {
+	};
+	memory { device_type = "memory"; reg = <0 0>; };
+
+};
+
+
+/ {
+	chosen {
+		bootargs = "";
+	};
+};
+
+
+/ {
+	model = "Qualcomm Technologies, Inc. MSM8996";
+	compatible = "qcom,msm8996";
+
+	soc: soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+		interrupt-parent = <&PIC0>;
+
+		PIC0: interrupt-controller@0 {
+			compatible = "qcom,h2-pic";
+			interrupt-controller;
+			#interrupt-cells = <2>;
+		};
+
+		gpt@AB000000 {
+			compatible="qcom,h2-timer";
+			reg = <0xab000000 0x1000>;
+			interrupts = <12 0>;
+		};
+
+
+	};
+};

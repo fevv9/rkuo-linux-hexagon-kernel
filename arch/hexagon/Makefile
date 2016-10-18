@@ -41,6 +41,7 @@ core-y += arch/hexagon/kernel/ \
 	arch/hexagon/lib/
 
 core-$(CONFIG_HEXAGON_MSM8974)	+= arch/hexagon/platform/msm8974/
+core-$(CONFIG_HEXAGON_MSM8996)	+= arch/hexagon/platform/msm8996/
 
 #  Devtree blob targets
 boot := arch/hexagon/boot
