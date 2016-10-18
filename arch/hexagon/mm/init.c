@@ -23,6 +23,7 @@
 #include <linux/bootmem.h>
 #include <asm/atomic.h>
 #include <linux/highmem.h>
+#include <linux/poison.h>
 #include <asm/tlb.h>
 #include <asm/sections.h>
 #include <asm/vm_mmu.h>
@@ -101,6 +102,7 @@ void __init mem_init(void)
  */
 void __init_refok free_initmem(void)
 {
+	free_initmem_default(POISON_FREE_INITMEM);
 }
 
 /*
