@@ -1,7 +1,7 @@
 /*
  * Memory subsystem initialization for Hexagon
  *
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2013,2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -158,7 +158,7 @@ void __init paging_init(void)
 }
 
 #ifndef DMA_RESERVE
-#define DMA_RESERVE		(4)
+#define DMA_RESERVE		(0)
 #endif
 
 #define DMA_CHUNKSIZE		(1<<22)
@@ -200,10 +200,11 @@ void __init setup_arch_memory(void)
 	/*  Prior to this, bootmem_lastpg is actually mem size  */
 	bootmem_lastpg += ARCH_PFN_OFFSET;
 
+#if DMA_RESERVE
 	/* Memory size needs to be a multiple of 16M */
 	bootmem_lastpg = PFN_DOWN((bootmem_lastpg << PAGE_SHIFT) &
 		~((BIG_KERNEL_PAGE_SIZE) - 1));
-
+#endif
 	/*
 	 * Reserve the top DMA_RESERVE bytes of RAM for DMA (uncached)
 	 * memory allocation
