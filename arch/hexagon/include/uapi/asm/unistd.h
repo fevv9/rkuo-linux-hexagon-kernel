@@ -1,7 +1,7 @@
 /*
  * Syscall support for Hexagon
  *
- * Copyright (c) 2010-2011,2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2014-2016 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,6 +25,12 @@
  *  3.  with __SYSCALL defined to produce syscall table initialization
  *  See also:  syscalltab.c
  */
+
+#define __ARCH_WANT_SYSCALL_DEPRECATED
+
+#define __ARCH_WANT_SYSCALL_OFF_T
+#define __ARCH_WANT_SYSCALL_NO_AT
+#define __ARCH_WANT_SYSCALL_NO_FLAGS
 
 #define __ARCH_WANT_SYS_EXECVE
 #define __ARCH_WANT_SYS_CLONE
