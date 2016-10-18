@@ -118,6 +118,12 @@ config HEXAGON_COMET
 
 endchoice
 
+config HEXAGON_LLVM
+	bool "LLVM"
+	default n
+	---help---
+	  Switch to adjust compilation flags for LLVM
+
 config HEXAGON_ARCH_VERSION
 	int "Architecture version (1 - 65)"
 	range 1 65

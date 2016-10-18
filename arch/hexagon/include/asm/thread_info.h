@@ -1,7 +1,7 @@
 /*
  * Thread support for the Hexagon architecture
  *
- * Copyright (c) 2010-2011,2013-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2011,2013-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -92,8 +92,14 @@ struct thread_info {
 #define qstr(s) #s
 #define QUOTED_THREADINFO_REG qqstr(THREADINFO_REG)
 
-register struct thread_info *__current_thread_info asm(QUOTED_THREADINFO_REG);
-#define current_thread_info()  __current_thread_info
+static inline struct thread_info *current_thread_info(void)
+{
+	struct thread_info *x;
+
+	asm("%0 = " QUOTED_THREADINFO_REG : "=r"(x));
+
+	return x;
+}
 
 #endif /* __ASSEMBLY__ */
 
