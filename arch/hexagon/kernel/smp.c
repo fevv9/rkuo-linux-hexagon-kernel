@@ -34,7 +34,6 @@
 #include <asm/time.h>    /*  timer_interrupt  */
 #include <asm/hexagon_vm.h>
 
-#define BASE_IPI_IRQ 26
 DEFINE_PER_CPU(u32, ipi_irq);
 
 /*  Virtual Processor ID storage  */
@@ -122,11 +121,12 @@ void send_ipi(const struct cpumask *cpumask, enum ipi_message_type msg)
 		/*  Possible barrier here  */
 
 		/*  VPID's don't change  */
-		retval = __vmintop_post(BASE_IPI_IRQ+cpu, per_cpu(vpid, cpu));
+		retval = __vmintop_post(CONFIG_BASE_IPI_IRQ+cpu,
+			per_cpu(vpid, cpu));
 
 		if (retval != 0) {
 			printk(KERN_ERR "interrupt %ld not configured?\n",
-				BASE_IPI_IRQ+cpu);
+				CONFIG_BASE_IPI_IRQ+cpu);
 		}
 	}
 
@@ -182,8 +182,8 @@ void start_secondary(void)
 	for (irq = 0; irq < HEXAGON_CPUINTS; irq++)
 		__vmintop_locdis(irq);
 
-	per_cpu(ipi_irq, cpu) = irq_find_mapping(NULL, BASE_IPI_IRQ+cpu);
-	__vmintop_globen(BASE_IPI_IRQ+cpu);
+	per_cpu(ipi_irq, cpu) = irq_find_mapping(NULL, CONFIG_BASE_IPI_IRQ+cpu);
+	__vmintop_globen(CONFIG_BASE_IPI_IRQ+cpu);
 	setup_irq(per_cpu(ipi_irq, cpu), &ipi_intdesc);
 
 	/*  Register the clock_event dummy  */
@@ -247,8 +247,8 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 	/*  Also need to register the interrupts for IPI  */
 	if (max_cpus > 1) {
 		per_cpu(ipi_irq, cpu) = irq_find_mapping(NULL,
-			BASE_IPI_IRQ+cpu);
-		__vmintop_globen(BASE_IPI_IRQ+cpu);
+			CONFIG_BASE_IPI_IRQ+cpu);
+		__vmintop_globen(CONFIG_BASE_IPI_IRQ+cpu);
 		setup_irq(per_cpu(ipi_irq, cpu), &ipi_intdesc);
 	}
 

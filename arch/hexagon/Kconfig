@@ -188,6 +188,14 @@ config NR_CPUS
 	  This is purely to save memory - each supported CPU adds
 	  approximately eight kilobytes to the kernel image.
 
+config BASE_IPI_IRQ
+	int "Base IPI IRQ" if SMP
+	default 8
+	---help---
+	  The base IRQ used for IPI calls.  Each CPU increments by one,
+	  although the newer hypervisor API specifies the lower range of
+	  interrupts to be percpu anyways.
+
 choice
 	prompt "Kernel page size"
 	default PAGE_SIZE_4KB
